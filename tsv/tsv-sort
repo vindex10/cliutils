@@ -1,0 +1,5 @@
+#!/bin/bash
+
+read HEADER
+RES="$HEADER\n"$(tee | sort -t"	" "$@")
+echo -e "$RES"

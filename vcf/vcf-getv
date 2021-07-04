@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# prepare small vcf with filtered variants included with context
+
+FILTER="$1"
+CNTX="$2"
+
+if [ -z "$CNTX" ]; then
+    CNTX=5
+fi;
+
+DAT=$(tee | grep --no-group-separator -C$CNTX -e '^#' -e "$FILTER")
+
+cat <(echo "$DAT" | grep --no-group-separator -e "^#") <(echo "$DAT" | grep --no-group-separator -v -e "^#" | grep --no-group-separator -C$CNTX -e "$FILTER")

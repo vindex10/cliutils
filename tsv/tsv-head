@@ -1,0 +1,3 @@
+#!/bin/bash
+read FIRSTLINE
+echo -e "$FIRSTLINE" | sed 's/\t/\n/g' | nl
