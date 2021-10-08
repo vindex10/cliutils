@@ -1,0 +1,33 @@
+#!/bin/bash
+
+ENV_LOC="$1";
+shift;
+
+function upgrade_pip() {
+    python2 -m pip install -U pip
+}
+
+function upgrade_deps() {
+    python2 -m pip install -U pylint flake8 ipdb python-lsp-server pynvim wheel
+}
+
+if [ ! -z "$VIRTUAL_ENV" ]; then
+    echo "Already inside of venv. Only upgrading deps"
+    upgrade_deps
+    exit 0;
+fi
+
+if [ -f activate ]; then
+    echo "activate already exists, activate env to install packages. exit"
+fi
+
+if [ -z $ENV_LOC ]; then
+    echo "provide path to env or activate existing"
+    exit 1;
+fi
+
+virtualenv -p python2 "$ENV_LOC" $@
+ln -s $ENV_LOC/bin/activate .
+. activate
+upgrade_pip
+upgrade_deps

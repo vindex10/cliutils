@@ -1,0 +1,5 @@
+#!/bin/bash
+mkdir "$1"
+shnsplit -f "$1.cue" -d "$1" -o flac -t "%n. %p - %t" "$1.flac" < "$1.cue"
+cuetag.sh "$1.cue" "./$1/"*.flac
+

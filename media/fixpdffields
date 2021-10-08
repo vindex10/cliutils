@@ -1,0 +1,9 @@
+#!/bin/bash
+
+INPUT_NAME="${1%.*}"
+INPUT_EXT="${1##*.}"
+OUTPUT="${2:-${INPUT_NAME}-fixed.${INPUT_EXT}}"
+
+pdftk "$1" generate_fdf output - | pdftk "$1" fill_form - output "$OUTPUT".tmp
+
+pdftk "$OUTPUT".tmp dump_data_fields_utf8 | fields2fdf | pdftk "$OUTPUT".tmp fill_form - output "$OUTPUT"

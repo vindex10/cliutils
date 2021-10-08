@@ -1,0 +1,16 @@
+#!/bin/bash
+
+export instdb="$HOME/.local/share/qpdfview/qpdfview"
+
+if [ $# -eq 0 ]; then
+	sqlite3 "$instdb/database" "select instanceName from tabs_v4 group by instanceName;"
+	printf "\nPlease, enter instance name:"
+	read instance
+	if [ -z "$instance" ]; then
+		nohup qpdfview --unique --choose-instance 1>/dev/null 2>&1 &
+	else
+		nohup qpdfview --unique --instance $instance 1>/dev/null 2>&1 &
+	fi
+else
+	nohup qpdfview --unique --instance $1 1>/dev/null 2>&1 &
+fi

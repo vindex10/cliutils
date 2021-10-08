@@ -1,0 +1,3 @@
+#!/bin/bash
+
+xkb-group -s 'V10ModUS'; xset dpms force standby; sleep 2; sudo loginctl hibernate

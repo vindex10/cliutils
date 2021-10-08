@@ -1,0 +1,56 @@
+#!/bin/bash
+
+default_sink=$(pactl info | grep "Default Sink" | sed 's/Default Sink: //')
+
+function parse_mute() {
+    batch="$1"
+    echo -e "$batch" | grep "Mute" | sed 's/^[[:space:]]*Mute: //'
+}
+
+function parse_volume() {
+    batch="$1"
+    echo -e "$batch" | grep 'Volume' | grep -v 'Base' | tr ',' '\n' | grep -o -e '[0-9]\+%' | tr '\n' '/' | sed 's/\/$/\n/'
+}
+
+buf=""
+default_batch=""
+
+sink_name="$2"
+if [ -z "$sink_name" ]; then
+    sink_name="$default_sink"
+fi
+
+while true; do
+    read line;
+    status="$?";
+    echo "$line" | grep '^Sink #[0-9]\+' > /dev/null
+    if ([ "$?" == "0" ] || [ "$status" != "0" ]) && [ "$buf" ]; then
+        echo "$buf" | grep "Name: $sink_name" > /dev/null
+        if [ "$?" == "0" ]; then
+            default_batch="$buf"
+            break
+        fi
+        buf=""
+    fi;
+    buf="$buf$line\n"
+    if [ "$status" != "0" ]; then
+        break
+    fi
+done <<<$(pactl list sinks)
+
+if [ ! "$default_batch" ]; then
+    exit 1;
+fi;
+
+
+case "$1" in
+    mute)
+        parse_mute "$default_batch"
+        ;;
+    volume)
+        parse_volume "$default_batch"
+        ;;
+    default_sink)
+        echo "$default_sink"
+        ;;
+esac

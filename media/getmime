@@ -1,0 +1,4 @@
+#!/bin/sh
+
+file --mime-type -b "$1"
+

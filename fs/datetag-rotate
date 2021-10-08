@@ -1,0 +1,39 @@
+#!/bin/bash
+
+HISTORY_LENGTH=$1
+BASE_DIR=$2
+
+if [ -z "$BASE_DIR" ]; then
+    BASE_DIR=`pwd`
+fi
+
+function prepend_date() {
+    tee | awk -vd='.' -vt='\t' -F'\t' '{ num=split($NF,parts,d); datetag=parts[num-1]; split(datetag,datetag_split,"-"); print datetag_split[1] t $0}'
+}
+
+function prepend_hash() {
+    tee | awk -vd='.' -vt='\t' -F'\t' '{ num=split($NF,parts,d); datetag=parts[num-1]; split(datetag,datetag_split,"-"); tag=datetag_split[2]; hash=""; for (i=1;i<=num;i++) i != (num-1) ? hash=(hash parts[i] d) : hash=(hash tag d); print hash t $0}'
+}
+
+function groupby() {
+    tee | prepend_date | prepend_hash | sort -t'	' -k1,2 -r
+}
+
+curtag=""
+declare -i counter=0
+while IFS= read -r group; do
+    tag=$(echo "$group" | cut -d'	' -f1)
+    file=$(echo "$group" | awk -F'\t' '{ print $NF }')
+
+    if [ "$tag" = "$curtag" ]; then
+        counter=$counter+1
+    else
+        counter=0
+        curtag="$tag"
+        continue
+    fi
+
+    if [ "$counter" -ge "$HISTORY_LENGTH" ]; then
+        rm -rf "$BASE_DIR/$file"
+    fi
+done <<< $(ls -1 $BASE_DIR | groupby)

@@ -1,0 +1,13 @@
+#!/bin/bash
+force_quit() {
+    echo "" | xclip -sel clip
+    exit 0;
+}
+
+trap force_quit SIGINT
+trap force_quit SIGTERM
+
+read cmd;
+echo "$cmd" | xclip -sel clip
+sleep 10
+echo "" | xclip -sel clip

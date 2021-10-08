@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pkill -USR1 redshift
+xcalib -i -a
+

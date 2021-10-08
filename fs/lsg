@@ -1,0 +1,15 @@
+#!/bin/bash
+
+ls_path=$1
+
+if [ -z $ls_path ]; then
+    ls_path="."
+fi
+
+while read path; do 
+    full_path=$ls_path/$path
+    if [ -d $full_path/.git ]; then
+        rev=$(cat $full_path/.git/HEAD | awk '{print $NF}' | sed 's/refs\/heads\///g')
+        echo "$path	($rev)"
+    fi;
+done <<< $(ls -1 $ls_path)

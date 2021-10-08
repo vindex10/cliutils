@@ -1,0 +1,7 @@
+#!/bin/bash
+
+PROC=`qstat -a | awk ' { print $7 } ' | tail -n +6 | paste -sd+ | bc`
+echo "Number of processors: "$PROC;
+PPN=32
+B=`bc <<<"scale=10; $PROC/$PPN"`
+echo "Number of nodes used (ppn=$PPN): "$B

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ssids=$(iwlist wlp2s0 scan | grep SSID | sed 's/^\s*ESSID\://' | sed 's/\(^"\|"$\)//g' | sort | uniq)
+while read -r ssid; do
+    hexssid=$(echo -en "$ssid" | xxd -p)
+    echo -e "${ssid}\t${hexssid}"
+done <<<$ssids

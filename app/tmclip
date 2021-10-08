@@ -1,0 +1,16 @@
+#!/bin/bash
+
+output_mode=$1;
+
+function clean_buffers() {
+    for i in seq 1 $(tmux list-buffers | wc -l); do
+        tmux delete-buffer
+    done;
+}
+
+if [ -z "$output_mode" ]; then
+    clean_buffers;
+    tmux set-buffer "$(tee)"
+elif [ "$output-mode"="-o" ]; then
+    tmux paste-buffer
+fi;

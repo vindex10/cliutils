@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function get_wifi_iface() {
+    ip addr | grep UP | grep wlp | awk '{print $2}' | sed 's/:$//'
+}
+
+IFACE=$1
+if [[ -z "$IFACE" ]]; then
+    IFACE=$(get_wifi_iface)
+fi
+
+wpa_cli -i $IFACE disconnect; sleep 1; wpa_cli -i $IFACE reconnect

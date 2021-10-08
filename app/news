@@ -1,0 +1,19 @@
+#!/bin/bash
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -C|--clean)
+    rm $HOME/.local/share/newsbeuter/cache.db
+    shift # past argument
+    ;;
+    *)
+    OPTS="$OPTS $key"
+    shift
+    ;;
+esac
+done
+
+echo $OPTS
+
+newsboat $OPTS

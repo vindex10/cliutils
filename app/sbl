@@ -1,0 +1,24 @@
+#!/bin/bash
+
+dirs=("." ".prj")
+for p in "${dirs[@]}"
+do
+	if [ -f "$p/"*.sublime-project ];
+	then
+		prjname=$( ls "$p/"*.sublime-project 2>/dev/null | head -n 1 )
+		break
+	fi
+done
+
+if [[ ${#prjname} > 0 ]];
+then
+	if [ $# -eq 0 ]
+	then
+		subl --project $prjname
+	else
+		subl --project $prjname  "$@"
+	fi
+
+else
+	subl "$@"
+fi

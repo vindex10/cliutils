@@ -1,0 +1,16 @@
+#!/bin/sh
+
+revert() {
+  xset dpms 0 0 0
+  sudo pwmfreq
+  xbacklight -inc 1
+  xbacklight -dec 1
+}
+
+trap revert HUP INT TERM
+xset +dpms dpms $1 $2 $3
+
+shift 3;
+
+i3lock -n $@
+revert
