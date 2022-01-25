@@ -1,4 +1,4 @@
 #!/bin/bash
 
-mpwcall=$(echo "mpw -f none $@")
+mpwcall=$(echo "spectre -Fnone $@")
 terminal -x /bin/bash -c "$mpwcall | txclip"
