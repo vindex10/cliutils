@@ -5,10 +5,11 @@ shift;
 
 function upgrade_pip() {
     python2 -m pip install -U pip
+    python2 -m pip install wheel
 }
 
 function upgrade_deps() {
-    python2 -m pip install -U pylint flake8 ipdb python-lsp-server pynvim wheel
+    python2 -m pip install -U pylint flake8 ipdb python-lsp-server pynvim
 }
 
 if [ ! -z "$VIRTUAL_ENV" ]; then

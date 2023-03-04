@@ -5,10 +5,11 @@ shift;
 
 function upgrade_pip() {
     python3 -m pip install -U pip
+    python3 -m pip install -U wheel
 }
 
 function upgrade_deps() {
-    python3 -m pip install -U pylint flake8 ipdb python-lsp-server pynvim wheel
+    python3 -m pip install -U pylint flake8 ipdb python-lsp-server pynvim
 }
 
 if [ ! -z "$VIRTUAL_ENV" ]; then
@@ -19,6 +20,7 @@ fi
 
 if [ -f activate ]; then
     echo "activate already exists, activate env to install packages. exit"
+    exit 1;
 fi
 
 if [ -z $ENV_LOC ]; then
