@@ -9,7 +9,7 @@ function upgrade_pip() {
 }
 
 function upgrade_deps() {
-    python2 -m pip install -U pylint flake8 ipdb python-lsp-server pynvim
+    python2 -m pip install -U pylint ipdb python-lsp-server python-lsp-ruff black pynvim pylsp-mypy ruff
 }
 
 if [ ! -z "$VIRTUAL_ENV" ]; then
