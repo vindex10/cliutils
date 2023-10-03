@@ -1,0 +1,30 @@
+#!/bin/bash
+set -x
+
+function get_dns_config() {
+    iface_pattern="$1"
+    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command '
+    $ErrorActionPreference="SilentlyContinue"
+    Get-NetAdapter -InterfaceDescription "'"$iface_pattern"'" | ?{ $_.Status -eq "Up" } | Get-DnsClientServerAddress -AddressFamily "IPv4" | Select -ExpandProperty ServerAddresses
+    Get-NetAdapter | ?{-not ($_.InterfaceDescription -like "'"$iface_pattern"'") -and ($_.Status -eq "Up") } | Get-DnsClientServerAddress -AddressFamily "IPv4" | Select -ExpandProperty ServerAddresses
+    ' | \
+            awk '{print "nameserver", $1}' | \
+            tr -d '\r'
+
+    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command '
+    $ErrorActionPreference="SilentlyContinue"
+    Get-DnsClientGlobalSetting | Select-Object -ExpandProperty SuffixSearchList
+    ' | \
+            awk '{print "search", $1}' | \
+            tr -d '\r'
+}
+
+function main() {
+    iface_pattern="$1"
+    get_dns_config "$iface_pattern" > /etc/resolvconf/resolv.conf.d/head
+    resolvconf -u
+}
+
+iface_pattern="$1"
+shift;
+main "$iface_pattern"
