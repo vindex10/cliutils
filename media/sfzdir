@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+import sys
+import glob
+
+
+def main(names_glob):
+    filenames = glob.glob(names_glob)
+    lines = []
+    lines.append("<global>")
+    lines.append("<group>")
+    lines.append("trigger=attack")
+    lines.append("loop_mode=no_loop")
+    for i, filename in enumerate(filenames):
+        lines.append(f'<region> sample={filename} key={i}')
+    print("\n".join(lines))
+
+
+if __name__ == "__main__":
+    main(sys.argv[1])

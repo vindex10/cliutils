@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# https://bugzilla.kernel.org/show_bug.cgi?id=217336#c92
+# https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2027816
+
+echo 'AMDI0010:00' >  /sys/bus/platform/drivers/i2c_designware/unbind
+# echo mask > /sys/firmware/acpi/interrupts/gpe04
