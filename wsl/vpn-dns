@@ -21,7 +21,7 @@ function get_dns_config() {
 
 function main() {
     iface_pattern="$1"
-    get_dns_config "$iface_pattern" > /etc/resolvconf/resolv.conf.d/head
+    get_dns_config "$iface_pattern" > /etc/resolv.conf
     resolvconf -u
 }
 
