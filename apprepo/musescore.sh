@@ -11,4 +11,4 @@ done
 
 wget $url
 chmod +x "$name"
-ln -s "$name" musescore
+ln -s -f "$name" musescore

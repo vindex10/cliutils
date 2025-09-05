@@ -3,13 +3,8 @@
 ENV_LOC="$1";
 shift;
 
-function upgrade_pip() {
-    python3 -m pip install -U pip
-    python3 -m pip install -U wheel
-}
-
 function upgrade_deps() {
-    python3 -m pip install -U pylint ipdb python-lsp-server python-lsp-ruff black ropevim pip-tools pynvim pylsp-mypy ruff uv
+    uv pip install -U pylint ipdb python-lsp-server python-lsp-ruff black ropevim pip-tools pynvim pylsp-mypy ruff
 }
 
 if [ ! -z "$VIRTUAL_ENV" ]; then
@@ -28,8 +23,8 @@ if [ -z $ENV_LOC ]; then
     exit 1;
 fi
 
-python3 -m venv "$ENV_LOC" $@
+NAME=$(basename $(realpath "$ENV_LOC"))
+uv venv --prompt="uv-$NAME" "$ENV_LOC"
 ln -s $ENV_LOC/bin/activate .
 . activate
-upgrade_pip
 upgrade_deps
